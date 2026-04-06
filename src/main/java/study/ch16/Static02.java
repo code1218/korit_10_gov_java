@@ -19,8 +19,8 @@ class UserRepository {
     private final User[] users;
     private Long lastCreatedId = 0l;
 
-    public UserRepository() {
-        users = new User[100];
+    public UserRepository(User[] users) {
+        this.users = users;
     }
 
     public boolean addUser(User user) {
@@ -61,9 +61,14 @@ class UserRepository {
 }
 
 class UserService {
+    private UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public int signup(String username, String password) {
         // 성공: 200, 실패: 400(중복 아이디), 500(공간부족)
-        UserRepository userRepository = new UserRepository();
         User foundUser = userRepository.findByUsername(username);
         if (foundUser != null) {
             return 400;
@@ -81,8 +86,13 @@ class UserService {
 }
 
 class UserController {
+    private UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     public void postMapping(String username, String password) {
-        UserService userService = new UserService();
         int status = userService.signup(username, password);
         switch (status) {
             case 200:
@@ -115,8 +125,12 @@ public class Static02 {
         System.out.println(Arrays.toString(usernames));
         System.out.println(Arrays.toString(passwords));
 
-        UserController userController = new UserController();
-        for (int i = 0; i < 500; i++) {
+        User[] users = new User[100];
+        UserRepository userRepository = new UserRepository(users);
+        UserService userService = new UserService(userRepository);
+
+        UserController userController = new UserController(userService);
+        for (int i = 0; i < 100; i++) {
             userController.postMapping(usernames[i], passwords[i]);
         }
 
