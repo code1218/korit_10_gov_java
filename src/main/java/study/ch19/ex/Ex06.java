@@ -21,13 +21,16 @@ class Student {
 
 public class Ex06 {
     public static void main(String[] args) {
+
         int currentStudentCode = 20260000;
+
         List<Student> studentList = List.of(
                 Student.builder().name("김준일").studentYear(1).korScore(80).engScore(90).mathScore(100).build(),
                 Student.builder().name("김준이").studentYear(2).korScore(70).engScore(80).mathScore(90).build(),
                 Student.builder().name("김준삼").studentYear(1).korScore(90).engScore(80).mathScore(70).build(),
                 Student.builder().name("김준사").studentYear(2).korScore(60).engScore(70).mathScore(80).build()
         );
+
         Map<Integer, List<Student>> studentMap = Map.of(
                 1, new ArrayList<>(),
                 2, new ArrayList<>()
