@@ -11,7 +11,10 @@ import java.util.stream.Stream;
 
 public class Ex1Application {
     public static void main(String[] args) throws IOException {
-        List<Boolean> b = new ArrayList<>();
+        Map<String, List<Long>> resultMap = new HashMap<>();
+        resultMap.put("scanner", new ArrayList<>());
+        resultMap.put("custom", new ArrayList<>());
+        resultMap.put("draw", new ArrayList<>());
 
         for (int i = 0; i < 100; i++) {
             Scanner sc = new Scanner(new StringReader("100000000"));
@@ -20,13 +23,25 @@ public class Ex1Application {
             long t2 = System.nanoTime();
 
             long t3 = System.nanoTime();
-            InputUtil.nextInt();
+            InputUtil.nextInt(new StringReader("100000000"));
             long t4 = System.nanoTime();
 
-            b.add(t2-t1 > t4-t3);
+            long sTime = t2 - t1;
+            long cTime = t4 - t3;
+
+            if (sTime < cTime) {
+                resultMap.get("scanner").add(sTime);
+            } else if (sTime > cTime) {
+                resultMap.get("custom").add(cTime);
+            } else {
+                resultMap.get("draw").add(cTime);
+            }
         }
-        System.out.println("scanner:" + b.stream().filter(bb -> bb).count());
-        System.out.println("custom:" + b.stream().filter(bb -> !bb).count());
+        System.out.println(resultMap);
+        System.out.println(resultMap.get("custom").stream().mapToLong(t -> t).sum() / resultMap.get("custom").size());
+        System.out.println(resultMap.get("scanner").stream().mapToLong(t -> t).sum() / resultMap.get("scanner").size());
+//        System.out.println("scanner:" + b.stream().filter(bb -> bb).count());
+//        System.out.println("custom:" + b.stream().filter(bb -> !bb).count());
 
 
         System.out.println("[ 학생관리 프로그램 실행 ]");
