@@ -2,6 +2,12 @@ package study.ch24;
 
 public class Thread01 {
     public static void main(String[] args) {
+//        for (int i = 0; i < 100; i++) {
+//            System.out.println("T1: " + i);
+//        }
+//        for (int i = 0; i < 100; i++) {
+//            System.out.println("T2: " + i);
+//        }
         Thread thread1 = new Thread(() -> {
             for (int i = 0; i < 100; i++) {
                 System.out.println("T1: " + i);

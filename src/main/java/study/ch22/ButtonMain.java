@@ -26,6 +26,7 @@ public class ButtonMain {
         ButtonClick btn1 = new HomeButton();
         ButtonClick btn2 = new BackButton();
         ButtonClick btn3 = new LoginButton();
+
         ButtonClick btn4 = new ButtonClick() {
             @Override
             public void onClick() {
