@@ -1,6 +1,6 @@
 package study.ch22;
 
 public interface ButtonClick {
-    void onClick();
+    public abstract void onClick();
 //    void onClick2();
 }

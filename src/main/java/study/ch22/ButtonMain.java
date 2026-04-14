@@ -1,9 +1,8 @@
 package study.ch22;
 
 class HomeButton implements ButtonClick {
-    @Override
     public void onClick() {
-        System.out.println("홈으로 이동");
+
     }
 }
 
@@ -40,6 +39,12 @@ public class ButtonMain {
         btn3.onClick();
         btn4.onClick();
 
+        Integer n1 = 100;
+        Integer n2 = 100;
+        Integer n3 = 300;
+        Integer n4 = 300;
+        Integer n5 = -128;
+        Integer n6 = -128;
 
     }
 }

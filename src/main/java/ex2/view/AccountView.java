@@ -1,5 +1,8 @@
 package ex2.view;
 
+import ex2.Ex2Application;
+import ex2.controller.Controller;
+import ex2.dto.ResponseDto;
 import ex2.router.RouterPath;
 import ex2.router.Routes;
 import ex2.util.Input;
@@ -10,9 +13,9 @@ public class AccountView implements View {
     public void render() {
         accountMenu();
         String cmd = Input.nextLine();
-        if ("b".equals(cmd)) {
+        ResponseDto<?> response = Controller.accountController(cmd);
+        if (response.getStatus() == 100) {
             RouterPath.current = Routes.HOME.name();
-            return;
         }
     }
 

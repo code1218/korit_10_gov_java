@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class HomeView implements View {
 
+    @Override
     public void render() {
         homeMenu();
         String cmd = Input.nextLine();
