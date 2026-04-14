@@ -16,7 +16,7 @@ public class Ex1Application {
         resultMap.put("custom", new ArrayList<>());
         resultMap.put("draw", new ArrayList<>());
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000000; i++) {
             Scanner sc = new Scanner(new StringReader("100000000"));
             long t1 = System.nanoTime();
             if (sc.hasNextInt()) sc.nextInt();
