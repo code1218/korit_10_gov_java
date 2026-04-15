@@ -7,8 +7,10 @@ import ex2.entity.Account;
 import ex2.router.RouterPath;
 import ex2.router.Routes;
 import ex2.util.Input;
+import ex2.view.component.Table;
 
-import java.util.List;
+import java.lang.reflect.Field;
+import java.util.*;
 
 public class AccountView implements View {
     private Account currentAccount;
@@ -18,7 +20,7 @@ public class AccountView implements View {
         if (currentAccount == null) {
             ResponseDto<?> accountListResponse = Controller.getAccountListController();
             if (accountListResponse.getStatus() == 400) {
-                notFoundAccount(accountListResponse.getData().toString());
+                accountError(accountListResponse.getData().toString());
                 RouterPath.current = Routes.HOME.name();
                 return;
             }
@@ -27,7 +29,7 @@ public class AccountView implements View {
             int selectedId = Integer.parseInt(Input.nextLine());
             ResponseDto<?> response = Controller.selectAccountController(selectedId);
             if (response.getStatus() == 400) {
-                notFoundAccount(response.getData().toString());
+                accountError(response.getData().toString());
                 return;
             }
             currentAccount = (Account) response.getData();
@@ -41,40 +43,48 @@ public class AccountView implements View {
             return;
         }
         if (menuResponse.getStatus() == 400) {
-            menuError(menuResponse.getData().toString());
+            accountError(menuResponse.getData().toString());
         }
     }
 
-    private void menuError(String message) {
-        System.out.println("======<< MENU ERROR >>======");
-        System.out.println("오류 내용[ " + message + "]");
-        System.out.println("============================");
-        System.out.println();
-    }
-
-    private void notFoundAccount(String message) {
-        System.out.println("======<< 계좌조회 실패 >>======");
-        System.out.println(message);
-        System.out.println("=============================");
+    private void accountError(String message) {
+        Map<String, String> props = new HashMap<>();
+        props.put("title", "문제 발견");
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("오류 메세지: ");
+        stringBuilder.append(message);
+        stringBuilder.append("\n");
+        props.put("body", stringBuilder.toString());
+        basicLayout(props);
+        Input.nextWait();
     }
 
     private void selectAccount(List<Account> accountList) {
-        System.out.println("======<< 계좌목록 >>======");
-        System.out.println("| ID |        계좌번호        | 예금주 |");
-        accountList.forEach(account -> {
-            System.out.printf("| %d | %s | %s |\n", account.getId(), account.getAccountNo(), account.getOwner());
-        });
-        System.out.println("=========================");
+        Map<String, String> props = new HashMap<>();
+        props.put("title", "계좌 목록");
+
+        List<List<Object>> rows = accountList.stream().map(row -> {
+            List<Object> fileds = new ArrayList<>();
+            Field[] fieldArray = row.getClass().getDeclaredFields();
+            for (Field f : fieldArray) {
+
+            }
+            return fileds;
+        }).toList();
+        props.put("body", new Table(List.of("ID", "AccountNo", "Owner"), ).getTable());
+        basicLayout(props);
     }
 
     private void accountMenu() {
-        System.out.printf("======<< 선택계좌: %s >>======\n", currentAccount.getAccountNo());
-        System.out.println("1. 거래내역조회");
-        System.out.println("2. 입금");
-        System.out.println("3. 출금");
-        System.out.println("b. 뒤로가기");
-        System.out.println("======================");
-        System.out.println();
+        Map<String, String> props = new HashMap<>();
+        props.put("title", String.format("선택계좌: %s", currentAccount.getAccountNo()));
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("1. 거래내역조회\n");
+        stringBuilder.append("2. 입금\n");
+        stringBuilder.append("3. 출금\n");
+        stringBuilder.append("b. 뒤로가기\n");
+        props.put("body", stringBuilder.toString());
+        basicLayout(props);
     }
 
 }
