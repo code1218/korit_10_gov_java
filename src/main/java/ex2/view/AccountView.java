@@ -66,12 +66,17 @@ public class AccountView implements View {
         List<List<Object>> rows = accountList.stream().map(row -> {
             List<Object> fileds = new ArrayList<>();
             Field[] fieldArray = row.getClass().getDeclaredFields();
-            for (Field f : fieldArray) {
 
+            for (Field f : fieldArray) {
+                try {
+                    f.setAccessible(true);
+                    fileds.add(f.get(row));
+                } catch (IllegalAccessException e) {}
             }
             return fileds;
         }).toList();
-        props.put("body", new Table(List.of("ID", "AccountNo", "Owner"), ).getTable());
+        System.out.println(rows);
+        props.put("body", new Table(List.of("ID", "AccountNo", "Owner", "Balance"), rows).getTable());
         basicLayout(props);
     }
 
