@@ -11,16 +11,45 @@ import ex2.util.Input;
 import java.util.List;
 
 public class AccountView implements View {
+    private Account currentAccount;
 
     @Override
     public void render() {
-        ResponseDto<?> accountListResponse = Controller.getAccountListController();
-        if (accountListResponse.getStatus() == 400) {
-            notFoundAccount(accountListResponse.getData().toString());
+        if (currentAccount == null) {
+            ResponseDto<?> accountListResponse = Controller.getAccountListController();
+            if (accountListResponse.getStatus() == 400) {
+                notFoundAccount(accountListResponse.getData().toString());
+                RouterPath.current = Routes.HOME.name();
+                return;
+            }
+            selectAccount((List<Account>) accountListResponse.getData());
+            System.out.println("======<< 계좌 ID선택 >>======");
+            int selectedId = Integer.parseInt(Input.nextLine());
+            ResponseDto<?> response = Controller.selectAccountController(selectedId);
+            if (response.getStatus() == 400) {
+                notFoundAccount(response.getData().toString());
+                return;
+            }
+            currentAccount = (Account) response.getData();
+        }
+        accountMenu();
+        String cmd = Input.nextLine();
+        ResponseDto<?> menuResponse = Controller.accountMenuController(cmd);
+        if (menuResponse.getStatus() == 100) {
+            currentAccount = null;
             RouterPath.current = Routes.HOME.name();
             return;
         }
-        selectAccount((List<Account>) accountListResponse.getData());
+        if (menuResponse.getStatus() == 400) {
+            menuError(menuResponse.getData().toString());
+        }
+    }
+
+    private void menuError(String message) {
+        System.out.println("======<< MENU ERROR >>======");
+        System.out.println("오류 내용[ " + message + "]");
+        System.out.println("============================");
+        System.out.println();
     }
 
     private void notFoundAccount(String message) {
@@ -39,7 +68,7 @@ public class AccountView implements View {
     }
 
     private void accountMenu() {
-        System.out.println("======<< ACCOUNT >>======");
+        System.out.printf("======<< 선택계좌: %s >>======\n", currentAccount.getAccountNo());
         System.out.println("1. 거래내역조회");
         System.out.println("2. 입금");
         System.out.println("3. 출금");
