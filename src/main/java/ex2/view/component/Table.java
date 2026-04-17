@@ -69,6 +69,7 @@ public class Table {
     public String createField(String name, int maxWidth) {
         int blankSize = ((maxWidth - name.length()) / 2) + 2;
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\t");
         for (int i = 0; i < blankSize; i++) {
             stringBuilder.append(" ");
         }
@@ -76,6 +77,7 @@ public class Table {
         for (int i = 0; i < blankSize; i++) {
             stringBuilder.append(" ");
         }
+        stringBuilder.append("\t");
         return stringBuilder.toString();
     }
 

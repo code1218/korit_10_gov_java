@@ -63,19 +63,19 @@ public class AccountView implements View {
         Map<String, String> props = new HashMap<>();
         props.put("title", "계좌 목록");
 
-        List<List<Object>> rows = accountList.stream().map(row -> {
+        List<List<Object>> rows = accountList.stream().map(account -> {
             List<Object> fileds = new ArrayList<>();
-            Field[] fieldArray = row.getClass().getDeclaredFields();
+            Field[] fieldArray = account.getClass().getDeclaredFields();
 
-            for (Field f : fieldArray) {
+            for (Field field : fieldArray) {
                 try {
-                    f.setAccessible(true);
-                    fileds.add(f.get(row));
+                    field.setAccessible(true);
+                    fileds.add(field.get(account));
                 } catch (IllegalAccessException e) {}
             }
             return fileds;
         }).toList();
-        System.out.println(rows);
+
         props.put("body", new Table(List.of("ID", "AccountNo", "Owner", "Balance"), rows).getTable());
         basicLayout(props);
     }
